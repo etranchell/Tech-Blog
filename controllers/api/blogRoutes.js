@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
       {
         where: {
           id: req.params.id,
-          user_id: req.params.user_id,
+        //   user_id: req.params.user_id,
         },
       }
     )
