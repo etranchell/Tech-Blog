@@ -1,121 +1,101 @@
-const router = require('express').Router();
-const { User, Blog, Comment } = require('../models');
-// const withAuth = require('../../utils/auth');
+const router = require("express").Router();
+const { User, Blog, Comment } = require("../models");
+const withAuth = require("../utils/auth");
 
-router.get('/', async (req, res) => {
-    try {
-      const blogData = await Blog.findAll({
-            // attributes: ['id', 'title', 'content'],
-            include: [
-                {
-                    // model: Comment,
-                    // attributes: [
-                    //     'id',
-                    //     'comment_body',
-                    //     'user_id',
-                    //     'blog_id'
-                    // ],
-                    include: {
-                        model: User,
-                        attributes: ['name'],
-                    },
-                },
-                {
-                    model: User,
-                    attributes: [
-                        'name',
-                    ],
-                },
-            ],
-        })
+router.get("/", async (req, res) => {
+  try {
+    const blogData = await Blog.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+    });
 
-        const blog = blogData.map((blog) => blog.get({ plain: true }));
+    const blog = blogData.map((blog) => blog.get({ plain: true }));
 
-        res.render('feed', {
-            blog
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    };
+    res.render("homepage", {
+      blog,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const blogData = await Blog.findOne({
-            where: {
-                id: req.params.id,
-            },
-            attributes: ['id', 'title', 'content'],
-            include: [
-                {
-                    model: Comment,
-                    attributes: [
-                        'id',
-                        'comment_body',
-                        'user_id',
-                        'blog_id'
-                    ],
-                    include: {
-                        model: User,
-                        attributes: ['name'],
-                    },
-                },
-                {
-                    model: User,
-                    attributes: ['name'],
-                },
-            ],
-        })
+router.get("/blog/:id", async (req, res) => {
+  try {
+    const blogData = await Blog.findByPk(req.params.id, {
+      include: [
+        {
+          model: Comment,
+          attributes: ["id", "comment_body", "user_id", "blog_id"],
+        },
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+    });
 
-        if (!blogData) {
-            res.status(404).json({ message: "No blog found" });
-            return;
-        }
-    
-        const blog = blogData.get({ plain: true });
-
-        // res.render('view', {
-        //     blog
-        // });
-    } catch(err) {
-        console.log(err);
-        res.status(500).json(err);
-    };
-});
-
-router.get('/', async (req, res) => {
-    try {
-        res.render('homepage');
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    };
-});
-
-router.get('/login', (req, res) => {
-    if (req.session.loggedIn) {
-        res.redirect('/');
-        return;
+    if (!blogData) {
+      res.status(404).json({ message: "No blog found" });
+      return;
     }
 
-    res.render('login');
+    const blog = blogData.get({ plain: true });
+
+    res.render("blog", {
+      ...blog,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get('/signup', (req, res) => {
-    if (req.session.loggedIn) {
-        res.redirect('/');
-        return;
-    }
+router.get("/blog", withAuth, async (req, res) => {
+  try {
+    const UserData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ["password"] },
+      include: [{ model: Blog }],
+    });
 
-    res.render('signup');
+    const user = UserData.get({ plain: true });
+    res.render("blog", {
+      ...user,
+      logged_in: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
+router.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/blog");
+    return;
+  }
 
-router.get('*', (req, res) => {
-    res.status(404).send("Can't go there!");
-    // res.redirect('/');
+  res.render("login");
 });
 
+router.get("/signup", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/signup");
+    return;
+  }
+
+  res.render("signup");
+});
+
+// router.get("*", (req, res) => {
+//   res.status(404).send("Can't go there!");
+//   // res.redirect('/');
+// });
 
 module.exports = router;

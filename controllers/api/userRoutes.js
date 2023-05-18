@@ -1,102 +1,109 @@
-const router = require('express').Router();
-const { User } = require('../../models/user');
+const router = require("express").Router();
+const { User } = require("../../models");
 
 // GET all users
-router.get('/', async (req, res) => {
-    try {
-        const userData = await User.findAll();
-        res.status(200).json(userData);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+router.get("/", async (req, res) => {
+  try {
+    const userData = await User.findAll();
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // GET a single user
-router.get('/:id', async (req, res) => {
-    try {
-        const userData = await User.findOne();
-        if (!userData) {
-            res.status(404).json({ message: 'No user found with this id!' });
-            return;
-        };
-        res.status(200).json(userData);
-    } catch (err) {
-        res.status(500).json(err);
+router.get("/:id", async (req, res) => {
+  try {
+    const userData = await User.findOne({
+        where: {
+            id: req.params.id,
+        },
+    });
+    if (!userData) {
+      res.status(404).json({ message: "No user found with this id!" });
+      return;
     }
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // CREATE a new user
-router.post('/', async (req, res) => {
-    try {
-        const userData = await User.create(req.body);
-        
-        req.session.save(() => {
-            req.session.user_id = userData.id;
-            req.session.logged_in = true;
+router.post("/", async (req, res) => {
+  try {
+    const userData = await User.create(req.body);
 
-            res.status(200).json(userData);
-        });
-    } catch (err) {
-        res.status(400).json(err);
-    }
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
+
+      res.status(200).json(userData);
+    });
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 // Route to login a user
-router.post('/login', async (req, res) => {
-    try {
-        const userData = await User.findOne({ where: { name: req.body.name } });
+router.post("/login", async (req, res) => {
+  try {
+    const userData = await User.findOne({ where: { name: req.body.name } });
 
-        if (!userData) {
-            res.status(400).json({ message: 'Incorrect name or password, please try again.' });
-            return;
-        }
-
-        const validPassword = await userData.checkPassword(req.body.password);
-
-        if (!validPassword) {
-            res.status(400).json({ message: 'Incorrect name or password, please try again.' });
-            return;
-        }
-
-        req.session.save(() => {
-            req.session.user_id = userData.id;
-            req.session.logged_in = true;
-
-            res.json({ user: userData, message: 'You have successfully logged in!' });
-        });
-
-    } catch (err) {
-        res.status(400).json(err);
+    if (!userData) {
+      res
+        .status(400)
+        .json({ message: "Incorrect name or password, please try again." });
+      return;
     }
+
+    const validPassword = await userData.checkPassword(req.body.password);
+
+    if (!validPassword) {
+      res
+        .status(400)
+        .json({ message: "Incorrect name or password, please try again." });
+      return;
+    }
+
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
+
+      res.json({ user: userData, message: "You have successfully logged in!" });
+    });
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
-// Route to logout a user
-router.post('/logout', (req, res) => {
-    if (req.session.logged_in) {
-        req.session.destroy(() => {
-            res.status(200).end('You have successfully logged out!');
-        });
-    } else {
-        res.status(404).end();
-    }
+// Route to logout a user 
+router.post("/logout", (req, res) => {
+  if (req.session.logged_in) {
+    req.session.destroy(() => {
+      res.status(200).send("You have successfully logged out!");
+    });
+  } else {
+    res.status(404).send("You are already logged out");
+  }
 });
 
-// DELETE a user by id value
-router.delete('/:id', async (req, res) => {
-    try {
-        const userData = await User.destroy({
-            where: {
-                id: req.params.id
-            },
-        });
-        if (!userData) {
-            res.status(404).json({ message: 'No user found with this id!' });
-            return;
-        }
-        res.status(200).json(userData);
-    } catch (err) {
-        res.status(500).json(err);
+// DELETE a user by id
+router.delete("/:id", async (req, res) => {
+  try {
+    const userData = await User.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!userData) {
+      res.status(404).json({ message: "No user found with this id!" });
+      return;
     }
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;

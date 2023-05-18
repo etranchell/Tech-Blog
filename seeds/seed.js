@@ -22,9 +22,7 @@ const seedDatabase = async () => {
     returning: true,
   });
 
-  const blogs = await Blog.bulkCreate(blogData, {
-    
-  });
+  const blogs = await Blog.bulkCreate(blogData, {});
 
   for (const blog of blogs) {
     const randomUserId = getRandomUserId(users);
