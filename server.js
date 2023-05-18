@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 // const exphbs = require('express-handlebars');
 const routes = require('./controllers');
-// const helpers = require('./utils/helpers');
+const helpers = require('./utils/helpers');
 
 // Import db connection
 const sequelize = require('./config/connection');
@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3001;
 const sess = {
     secret: 'Super secret secret',
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 3000000,
         httpOnly: true,
         secure: false,
         sameSite: 'strict',
@@ -40,14 +40,14 @@ app.use(session(sess));
 
 // Inform Express.js which template engine to use
 // app.engine('handlebars', hbs.engine);
-// app.set('view engine', 'handlebars');
+app.set('view engine', 'handlebars');
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (import CSS file)
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to routes in controller folder
 app.use(routes);

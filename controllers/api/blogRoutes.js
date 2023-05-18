@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const { Blog } = require('../../models');
+const { Blog } = require('../../models/blog');
 const withAuth = require('../../utils/auth');
 
 //// get all blogs////
-router.get('/', async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
   try {
       const blogData = await Blog.findAll();
       res.status(200).json(blogData);
@@ -14,11 +14,11 @@ router.get('/', async (req, res) => {
 
 
 //// post new blog/////
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
    try {
       const newBlog = await Blog.create({
         ...req.body,
-        // user_id: req.session.user_id,
+        blog_id: req.session.blog_id,
       })
   
       res.status(200).json(newBlog);
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 
 
   //// update a blog/////
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', withAuth, async (req, res) => {
     try {
     Blog.update(
       {
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
       {
         where: {
           id: req.params.id,
-        //   user_id: req.params.user_id,
+          user_id: req.params.user_id,
         },
       }
     )
@@ -53,12 +53,12 @@ router.post('/', async (req, res) => {
   
 
   //// delete blog //////
-  router.delete('/:id', async (req, res) => {
+  router.delete('/:id', withAuth, async (req, res) => {
     try {
       const blogData = await Blog.destroy({
         where: {
           id: req.params.id,
-        //   user_id: req.session.user_id,
+          user_id: req.session.user_id,
         },
       });
   

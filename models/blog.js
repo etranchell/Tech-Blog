@@ -15,16 +15,12 @@ Blog.init(
     title: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            len: [1]
-        }
+        
     },
     content: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            len: [1]
-        }
+        
     },
     user_id: {
         type: DataTypes.INTEGER,
