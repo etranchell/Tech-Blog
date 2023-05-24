@@ -13,10 +13,10 @@ router.get("/", async (req, res) => {
       ],
     });
 
-    const blog = blogData.map((blog) => blog.get({ plain: true }));
+    const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
     res.render("homepage", {
-      blog,
+      blogs,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
@@ -57,7 +57,7 @@ router.get("/blog/:id", async (req, res) => {
   }
 });
 
-router.get("/blog", withAuth, async (req, res) => {
+router.get("/createblog", withAuth, async (req, res) => {
   try {
     const UserData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ["password"] },
@@ -65,7 +65,7 @@ router.get("/blog", withAuth, async (req, res) => {
     });
 
     const user = UserData.get({ plain: true });
-    res.render("blog", {
+    res.render("createblog", {
       ...user,
       logged_in: true,
     });
@@ -77,7 +77,7 @@ router.get("/blog", withAuth, async (req, res) => {
 
 router.get("/login", (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/blog");
+    res.redirect("/createblog");
     return;
   }
 
