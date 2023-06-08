@@ -57,6 +57,7 @@ router.get("/blog/:id", async (req, res) => {
   }
 });
 
+
 router.get("/createblog", withAuth, async (req, res) => {
   try {
     const UserData = await User.findByPk(req.session.user_id, {
@@ -74,6 +75,56 @@ router.get("/createblog", withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+router.get("/comments/:blog_id", withAuth, async (req, res) => {
+  try {
+    const CommentData = await Comment.findAll({
+      where: {
+        blog_id: req.params.blog_id,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    if (!CommentData) {
+      res.status(404).json({ message: "No comments found" });
+      return;
+    }
+
+    const comments = CommentData.map((comment) => comment.get({ plain: true }));
+
+    res.render("comments", {
+      comments: comments,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/comment/:blog_id", withAuth, async (req, res) => {
+  try {
+    const BlogData = await Blog.findByPk(req.params.blog_id, {
+      include: [{ model: Comment }],
+    });
+
+    const blog = BlogData.get({ plain: true });
+
+    res.render("createComment", {
+      ...blog,
+      logged_in: true,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 
 router.get("/login", (req, res) => {
   if (req.session.loggedIn) {

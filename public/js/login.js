@@ -17,7 +17,7 @@ const loginFormHandler = async (event) => {
       // If successful, redirect the browser to the profile page
       document.location.replace("/createblog");
     } else {
-      alert(response.statusText);
+      alert('Please check name and password, or sign up first');
     }
   }
 };
