@@ -9,7 +9,7 @@
 
 ## Installation
 
-Clone the app at https://github.com/etranchell/Tech-Blog. Open in vs code. For installtion npm i,  then npm start to run the applicaiton.
+Clone the app at https://github.com/etranchell/Tech-Blog. Open in vs code. For installation npm i,  then npm start to run the applicaiton.
 
 Heroku link - https://tech-blog23-5c92c729b8dd.herokuapp.com/
 
