@@ -9,7 +9,9 @@
 
 ## Installation
 
-Clone the app at https://github.com/etranchell/Tech-Blog. Open in vs code. For installtion npm i,  then npm start to run the applicaiton
+Clone the app at https://github.com/etranchell/Tech-Blog. Open in vs code. For installtion npm i,  then npm start to run the applicaiton.
+
+Heroku link - https://tech-blog23-5c92c729b8dd.herokuapp.com/
 
 ## Usage
 
@@ -18,6 +20,8 @@ Screen shot of homepage.  ![Alt text](image-2.png)
 Screen shot of blogs created. ![Alt text](image-3.png)
 
 Screen shot of login/sign up page. ![Alt text](image-4.png)
+
+Deployed to heroku ![Alt text](image.png)
 
 
 ## License
