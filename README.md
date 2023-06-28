@@ -15,13 +15,17 @@ Heroku link - https://tech-blog23-5c92c729b8dd.herokuapp.com/
 
 ## Usage
 
-Screen shot of homepage.  ![Alt text](image-2.png)
+Screen shot of homepage. ![Screenshot 2023-06-28 130733](https://github.com/etranchell/Tech-Blog/assets/123092979/915c59ba-7dda-40ce-a2e5-685354ddb3c8)
 
-Screen shot of blogs created. ![Alt text](image-3.png)
 
-Screen shot of login/sign up page. ![Alt text](image-4.png)
+Screen shot of blogs created. ![Screenshot 2023-06-28 130824](https://github.com/etranchell/Tech-Blog/assets/123092979/cb6150e2-2584-4753-a5aa-ab2d82e7a3aa)
 
-Deployed to heroku ![Alt text](image.png)
+
+Screen shot of login/sign up page. ![Screenshot 2023-06-28 131016](https://github.com/etranchell/Tech-Blog/assets/123092979/7de287c9-d19b-431e-8674-1599a028ae9b)
+
+
+Deployed to heroku ![image](https://github.com/etranchell/Tech-Blog/assets/123092979/507e3997-0d5e-4060-bc39-aa800f638b6e)
+
 
 
 ## License
