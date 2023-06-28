@@ -12,7 +12,7 @@ const commentFormHandler = async (event) => {
   //   window.location.toString().split('/').length - 1
   // ];
   if (comment_body) {
-    const response = await fetch('api/comments', {
+    const response = await fetch('api/comment', {
       method: 'POST',
       body: JSON.stringify({
         blog_id,
@@ -24,7 +24,7 @@ const commentFormHandler = async (event) => {
     });
 
     if (response.ok) {
-      document.location.replace('/api/comments');
+      document.location.replace('/api/comment');
     } else {
       alert(response.statusText);
     }
